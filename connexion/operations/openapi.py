@@ -251,7 +251,7 @@ class OpenAPIOperation(AbstractOperation):
         default_body = deepcopy(self.body_schema.get('default', {}))
         body_arg = default_body
         if hasattr(body, 'update'):
-            # dicts can be updated
+            # objects can be partially updated
             body_arg.update(body)
         elif body is not None:
             # single values, or array are replaced
