@@ -248,58 +248,18 @@ class OpenAPIOperation(AbstractOperation):
         if is_nullable(self.body_schema) and is_null(body):
             return {x_body_name: None}
 
-        default_body = self.body_schema.get('default', {})
-        body_props = {sanitize(k): {"schema": v} for k, v
-                      in self.body_schema.get("properties", {}).items()}
-
-        # by OpenAPI specification `additionalProperties` defaults to `true`
-        # see: https://github.com/OAI/OpenAPI-Specification/blame/3.0.2/versions/3.0.2.md#L2305
-        additional_props = self.body_schema.get("additionalProperties", True)
-
-        if body is None:
-            body = deepcopy(default_body)
-
-        if self.body_schema.get("type") != "object":
-            if x_body_name in arguments or has_kwargs:
-                return {x_body_name: body}
-            return {}
-
-        body_arg = deepcopy(default_body)
-        body_arg.update(body or {})
-
-        res = {}
-        if body_props or additional_props:
-            res = self._sanitize_body_argument(body_arg, body_props, additional_props, sanitize)
+        default_body = deepcopy(self.body_schema.get('default', {}))
+        body_arg = default_body
+        if hasattr(body, 'update'):
+            # dicts can be updated
+            body_arg.update(body)
+        elif body is not None:
+            # single values, or array are replaced
+            body_arg = body
 
         if x_body_name in arguments or has_kwargs:
-            return {x_body_name: res}
+            return {x_body_name: body_arg}
         return {}
-
-    def _sanitize_body_argument(self, body_arg, body_props, additional_props, sanitize):
-        """
-        :type body_arg: type dict
-        :type body_props: dict
-        :type additional_props: dict|bool
-        :type sanitize: types.FunctionType
-        :rtype: dict
-        """
-        additional_props_defn = {"schema": additional_props} if isinstance(additional_props, dict) else None
-        res = {}
-
-        for key, value in body_arg.items():
-            key = sanitize(key)
-            try:
-                prop_defn = body_props[key]
-                res[key] = self._get_val_from_param(value, prop_defn)
-            except KeyError:  # pragma: no cover
-                if not additional_props:
-                    logger.error("Body property '{}' not defined in body schema".format(key))
-                    continue
-                if additional_props_defn is not None:
-                    value = self._get_val_from_param(value, additional_props_defn)
-                res[key] = value
-
-        return res
 
     def _get_query_arguments(self, query, arguments, has_kwargs, sanitize):
         query_defns = {sanitize(p["name"]): p
