@@ -35,6 +35,15 @@ class FlaskApi(AbstractAPI):
         logger.debug('Adding spec json: %s/%s', self.base_path,
                      self.options.openapi_spec_path)
         endpoint_name = "{name}_openapi_json".format(name=self.blueprint.name)
+
+        def spec_for_url():
+            """ Modify base_path in the spec based on incoming url
+                This fixes problems with reverse proxies changing the path.
+            """
+            openapi_json_route = ".".join([self.blueprint.name, endpoint_name])
+            base_path = flask.url_for(openapi_json_route).rsplit("/", 1)[0]
+            return flask.jsonify(self.specification.with_base_path(base_path).raw)
+
         self.blueprint.add_url_rule(self.options.openapi_spec_path,
                                     endpoint_name,
                                     lambda: flask.jsonify(self.specification.raw))
@@ -300,9 +309,16 @@ class InternalHandlers(object):
 
         :return:
         """
+        openapi_json_route_name = "{blueprint}.{prefix}_openapi_json"
+        escaped = self.base_path.replace(".", "_")
+        openapi_json_route_name = openapi_json_route_name.format(
+            blueprint=escaped,
+            prefix=escaped
+        )
+        json_url = flask.url_for(openapi_json_route_name)
         return flask.render_template(
             'index.j2',
-            openapi_spec_url=(self.base_path + self.options.openapi_spec_path)
+            openapi_spec_url=json_url
         )
 
     def console_ui_static_files(self, filename):
