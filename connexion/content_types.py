@@ -3,12 +3,12 @@ import re
 
 from jsonschema import ValidationError
 
-from ..exceptions import ExtraParameterProblem
-from ..problem import problem
-from ..types import coerce_type
-from ..utils import is_null
+from .exceptions import ExtraParameterProblem
+from .problem import problem
+from .types import coerce_type
+from .utils import is_null
 
-logger = logging.getLogger('connexion.serialization.deserializers')
+logger = logging.getLogger('connexion.content_types')
 
 
 class ContentHandler(object):
@@ -116,7 +116,7 @@ class MultiPartFormDataContentHandler(FormDataContentHandler):
     )
 
 
-DEFAULT_DESERIALIZERS = [
+KNOWN_CONTENT_TYPES = [
     StreamingContentHandler,
     JSONContentHandler,
     FormDataContentHandler,
