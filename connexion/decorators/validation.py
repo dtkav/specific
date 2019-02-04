@@ -94,10 +94,9 @@ class RequestBodyValidator(object):
                 error = content_handler.validate(request)
                 if error:
                     return error
-
-            elif self.strict_validation:
-                logger.warning("No handler for ({content_type})".format(
-                    content_type=request.content_type))
+            else:
+                logger.debug("No handler for ({content_type})".format(
+                             content_type=request.content_type))
 
             response = function(request)
             return response
