@@ -6,10 +6,10 @@ import tempfile
 from yaml import YAMLError
 
 import pytest
-from connexion import FlaskApi
-from connexion.exceptions import InvalidSpecification, ResolverError
-from connexion.spec import canonical_base_path
 from mock import MagicMock
+from specific import FlaskApi
+from specific.exceptions import InvalidSpecification, ResolverError
+from specific.spec import canonical_base_path
 
 TEST_FOLDER = pathlib.Path(__file__).parent
 
@@ -133,5 +133,5 @@ def test_validation_error_on_completely_invalid_swagger_spec():
 @pytest.fixture
 def mock_api_logger(monkeypatch):
     mocked_logger = MagicMock(name='mocked_logger')
-    monkeypatch.setattr('connexion.apis.abstract.logger', mocked_logger)
+    monkeypatch.setattr('specific.apis.abstract.logger', mocked_logger)
     return mocked_logger

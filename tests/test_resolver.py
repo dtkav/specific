@@ -1,20 +1,20 @@
-import connexion.apps
 import pytest
-from connexion.exceptions import ResolverError
-from connexion.operations import Swagger2Operation
-from connexion.resolver import Resolver, RestyResolver
+import specific.apps
+from specific.exceptions import ResolverError
+from specific.operations import Swagger2Operation
+from specific.resolver import Resolver, RestyResolver
 
 PARAMETER_DEFINITIONS = {'myparam': {'in': 'path', 'type': 'integer'}}
 
 
 def test_standard_get_function():
-    function = Resolver().resolve_function_from_operation_id('connexion.FlaskApp.common_error_handler')
-    assert function == connexion.FlaskApp.common_error_handler
+    function = Resolver().resolve_function_from_operation_id('specific.FlaskApp.common_error_handler')
+    assert function == specific.FlaskApp.common_error_handler
 
 
 def test_resty_get_function():
-    function = RestyResolver('connexion').resolve_function_from_operation_id('connexion.FlaskApp.common_error_handler')
-    assert function == connexion.FlaskApp.common_error_handler
+    function = RestyResolver('specific').resolve_function_from_operation_id('specific.FlaskApp.common_error_handler')
+    assert function == specific.FlaskApp.common_error_handler
 
 
 def test_missing_operation_id():
@@ -23,7 +23,7 @@ def test_missing_operation_id():
     with pytest.raises(ResolverError):
         Resolver().resolve_function_from_operation_id(None)
     with pytest.raises(ResolverError):
-        RestyResolver('connexion').resolve_function_from_operation_id(None)
+        RestyResolver('specific').resolve_function_from_operation_id(None)
 
 
 def test_bad_operation_id():
@@ -32,7 +32,7 @@ def test_bad_operation_id():
     with pytest.raises(ResolverError):
         Resolver().resolve_function_from_operation_id('ohai.I.do.not.exist')
     with pytest.raises(ResolverError):
-        RestyResolver('connexion').resolve_function_from_operation_id('ohai.I.do.not.exist')
+        RestyResolver('specific').resolve_function_from_operation_id('ohai.I.do.not.exist')
 
 
 def test_standard_resolve_x_router_controller():

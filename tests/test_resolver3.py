@@ -1,5 +1,5 @@
-from connexion.operations import OpenAPIOperation
-from connexion.resolver import Resolver, RestyResolver
+from specific.operations import OpenAPIOperation
+from specific.resolver import Resolver, RestyResolver
 
 COMPONENTS = {'parameters': {'myparam': {'in': 'path', 'schema': {'type': 'integer'}}}}
 

@@ -5,13 +5,13 @@ import types
 
 import mock
 import pytest
-from connexion.apis.flask_api import Jsonifier
-from connexion.decorators.security import (get_tokeninfo_remote,
-                                           validate_scope, verify_security)
-from connexion.exceptions import InvalidSpecification
-from connexion.json_schema import resolve_refs
-from connexion.operations import Swagger2Operation
-from connexion.resolver import Resolver
+from specific.apis.flask_api import Jsonifier
+from specific.decorators.security import (get_tokeninfo_remote, validate_scope,
+                                          verify_security)
+from specific.exceptions import InvalidSpecification
+from specific.json_schema import resolve_refs
+from specific.operations import Swagger2Operation
+from specific.resolver import Resolver
 
 TEST_FOLDER = pathlib.Path(__file__).parent
 
@@ -247,7 +247,7 @@ def make_operation(op, definitions=True, parameters=True):
 def test_operation(api, monkeypatch):
     dummy = object()
     verify_oauth = mock.MagicMock(return_value=dummy)
-    monkeypatch.setattr('connexion.operations.secure.verify_oauth', verify_oauth)
+    monkeypatch.setattr('specific.operations.secure.verify_oauth', verify_oauth)
 
     op_spec = make_operation(OPERATION1)
     operation = Swagger2Operation(api=api,
@@ -340,7 +340,7 @@ def test_operation_composed_definition(api):
 def test_operation_local_security_oauth2(api, monkeypatch):
     dummy = object()
     verify_oauth = mock.MagicMock(return_value=dummy)
-    monkeypatch.setattr('connexion.operations.secure.verify_oauth', verify_oauth)
+    monkeypatch.setattr('specific.operations.secure.verify_oauth', verify_oauth)
 
     op_spec = make_operation(OPERATION8)
     operation = Swagger2Operation(api=api,
@@ -377,7 +377,7 @@ def test_operation_local_security_oauth2(api, monkeypatch):
 def test_operation_local_security_duplicate_token_info(api, monkeypatch):
     dummy = object()
     verify_oauth = mock.MagicMock(return_value=dummy)
-    monkeypatch.setattr('connexion.operations.secure.verify_oauth', verify_oauth)
+    monkeypatch.setattr('specific.operations.secure.verify_oauth', verify_oauth)
 
     op_spec = make_operation(OPERATION8)
     operation = Swagger2Operation(api=api,

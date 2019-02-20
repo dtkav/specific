@@ -57,7 +57,7 @@ paths:
         '200':
           description: greeting response
           content:
-            application/x.connexion+json:
+            application/x.specific+json:
               schema:
                 type: object
       parameters:
@@ -403,7 +403,7 @@ paths:
           in: query
           schema:
             type: string
-            default: connexion
+            default: specific
       responses:
         '200':
           description: OK

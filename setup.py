@@ -18,7 +18,7 @@ def read_version(package):
                 return line.split()[-1].strip().strip("'")
 
 
-version = read_version('connexion')
+version = read_version('specific')
 
 install_requires = [
     'clickclick>=1.2',
@@ -30,31 +30,17 @@ install_requires = [
     'pathlib>=1.0.1; python_version < "3.4"',
     'typing>=3.6.1; python_version < "3.6"',
     'openapi-spec-validator>=0.2.4',
+    'flask>=0.10.1',
+    'swagger-ui-bundle>=0.0.2'
 ]
-
-swagger_ui_require = 'swagger-ui-bundle>=0.0.2'
-flask_require = 'flask>=0.10.1'
-aiohttp_require = [
-    'aiohttp>=2.3.10,<3.5.2',
-    'aiohttp-jinja2>=0.14.0'
-]
-ujson_require = 'ujson>=1.35'
 
 tests_require = [
     'decorator',
     'mock',
     'pytest',
     'pytest-cov',
-    'testfixtures',
-    flask_require,
-    swagger_ui_require
+    'testfixtures'
 ]
-
-if sys.version_info >= (3, 5, 3):
-    tests_require.extend(aiohttp_require)
-    tests_require.append(ujson_require)
-    tests_require.append('pytest-aiohttp')
-    tests_require.append('aiohttp-remotes')
 
 
 class PyTest(TestCommand):
@@ -64,7 +50,7 @@ class PyTest(TestCommand):
     def initialize_options(self):
         TestCommand.initialize_options(self)
         self.cov = None
-        self.pytest_args = ['--cov', 'connexion', '--cov-report', 'term-missing', '-v']
+        self.pytest_args = ['--cov', 'specific', '--cov-report', 'term-missing', '-v']
 
         if sys.version_info < (3, 5, 3):
             self.pytest_args.append('--cov-config=py2-coveragerc')
@@ -89,30 +75,26 @@ class PyTest(TestCommand):
 
 def readme():
     try:
-        return open('README.rst', encoding='utf-8').read()
+        return open('README.md', encoding='utf-8').read()
     except TypeError:
-        return open('README.rst').read()
+        return open('README.md').read()
 
 
 setup(
-    name='connexion',
+    name='specific',
     packages=find_packages(),
     version=version,
-    description='Connexion - API first applications with OpenAPI/Swagger and Flask',
+    description='Specific - spec-first web framework',
     long_description=readme(),
-    author='Zalando SE',
-    url='https://github.com/zalando/connexion',
-    keywords='openapi oai swagger rest api oauth flask microservice framework',
+    author='Daniel Grossmann-Kavanagh',
+    url='https://github.com/dtkav/specific',
+    keywords='openapi oai rest api oauth flask microservice framework',
     license='Apache License Version 2.0',
     setup_requires=['flake8'],
-    install_requires=install_requires + [flask_require],
+    install_requires=install_requires,
     tests_require=tests_require,
     extras_require={
         'tests': tests_require,
-        'flask': flask_require,
-        'swagger-ui': swagger_ui_require,
-        'aiohttp': aiohttp_require,
-        'ujson': ujson_require
     },
     cmdclass={'test': PyTest},
     test_suite='tests',
@@ -130,5 +112,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Application Frameworks'
     ],
     include_package_data=True,  # needed to include swagger-ui (see MANIFEST.in)
-    entry_points={'console_scripts': ['connexion = connexion.cli:main']}
+    entry_points={'console_scripts': ['specific = specific.cli:main']}
 )

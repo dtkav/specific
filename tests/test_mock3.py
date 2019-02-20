@@ -1,5 +1,5 @@
-from connexion.mock import MockResolver
-from connexion.operations import OpenAPIOperation
+from specific.mock import MockResolver
+from specific.operations import OpenAPIOperation
 
 
 def test_mock_resolver():

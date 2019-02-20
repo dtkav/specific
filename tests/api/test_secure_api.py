@@ -1,6 +1,6 @@
 import json
 
-from connexion import FlaskApp
+from specific import FlaskApp
 
 
 def test_security_over_nonexistent_endpoints(oauth_requests, secure_api_app):
@@ -81,12 +81,12 @@ def test_security(oauth_requests, secure_endpoint_app):
     assert get_bye_from_flask.data == b'Goodbye test-user (Secure!)'
 
     headers = {"Authorization": "Bearer 100"}
-    get_bye_from_connexion = app_client.get('/v1.0/byesecure-from-connexion', headers=headers)  # type: flask.Response
-    assert get_bye_from_connexion.data == b'Goodbye test-user (Secure!)'
+    get_bye_from_specific = app_client.get('/v1.0/byesecure-from-specific', headers=headers)  # type: flask.Response
+    assert get_bye_from_specific.data == b'Goodbye test-user (Secure!)'
 
     headers = {"Authorization": "Bearer 100"}
-    get_bye_from_connexion = app_client.get('/v1.0/byesecure-jwt/test-user', headers=headers)  # type: flask.Response
-    assert get_bye_from_connexion.data == b'Goodbye test-user (Secure: 100)'
+    get_bye_from_specific = app_client.get('/v1.0/byesecure-jwt/test-user', headers=headers)  # type: flask.Response
+    assert get_bye_from_specific.data == b'Goodbye test-user (Secure: 100)'
 
 def test_checking_that_client_token_has_all_necessary_scopes(
         oauth_requests, secure_endpoint_app):

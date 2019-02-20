@@ -3,8 +3,8 @@
 Mock OAuth2 token info
 '''
 
-import connexion
-from connexion import request
+import specific
+from specific import request
 
 # our hardcoded mock "Bearer" access tokens
 TOKENS = {
@@ -28,6 +28,6 @@ def get_tokeninfo() -> dict:
 
 
 if __name__ == '__main__':
-    app = connexion.FlaskApp(__name__)
+    app = specific.FlaskApp(__name__)
     app.add_api('mock_tokeninfo.yaml')
     app.run(port=7979)

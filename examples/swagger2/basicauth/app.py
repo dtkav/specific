@@ -3,7 +3,7 @@
 Basic example of a resource server
 '''
 
-import connexion
+import specific
 
 
 def basic_auth(username, password, required_scopes=None):
@@ -19,6 +19,6 @@ def get_secret(user) -> str:
 
 
 if __name__ == '__main__':
-    app = connexion.FlaskApp(__name__)
+    app = specific.FlaskApp(__name__)
     app.add_api('swagger.yaml')
     app.run(port=8080)

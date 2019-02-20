@@ -1,9 +1,9 @@
 import math
 
-import connexion.apps
 import pytest
-from connexion import utils
+import specific.apps
 from mock import MagicMock
+from specific import utils
 
 
 def test_get_function_from_name():
@@ -25,14 +25,14 @@ def test_get_function_from_name_attr_error(monkeypatch):
     """
     deep_attr_mock = MagicMock()
     deep_attr_mock.side_effect = AttributeError
-    monkeypatch.setattr("connexion.utils.deep_getattr", deep_attr_mock)
+    monkeypatch.setattr("specific.utils.deep_getattr", deep_attr_mock)
     with pytest.raises(AttributeError):
         utils.get_function_from_name('math.ceil')
 
 
 def test_get_function_from_name_for_class_method():
-    function = utils.get_function_from_name('connexion.FlaskApp.common_error_handler')
-    assert function == connexion.FlaskApp.common_error_handler
+    function = utils.get_function_from_name('specific.FlaskApp.common_error_handler')
+    assert function == specific.FlaskApp.common_error_handler
 
 
 def test_boolean():

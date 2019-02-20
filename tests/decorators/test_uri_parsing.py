@@ -1,9 +1,9 @@
 from werkzeug.datastructures import MultiDict
 
 import pytest
-from connexion.decorators.uri_parsing import (AlwaysMultiURIParser,
-                                              FirstValueURIParser,
-                                              Swagger2URIParser)
+from specific.decorators.uri_parsing import (AlwaysMultiURIParser,
+                                             FirstValueURIParser,
+                                             Swagger2URIParser)
 
 QUERY1 = MultiDict([("letters", "a"), ("letters", "b,c"),
                     ("letters", "d,e,f")])

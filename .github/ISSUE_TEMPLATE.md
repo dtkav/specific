@@ -19,4 +19,4 @@
 Output of the commands:
 
 - `python --version`
-- `pip show connexion | grep "^Version\:"`
+- `pip show specific | grep "^Version\:"`

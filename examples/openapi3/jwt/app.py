@@ -5,13 +5,13 @@ Basic example of a resource server
 
 import time
 
-import connexion
 import six
+import specific
 from werkzeug.exceptions import Unauthorized
 
 from jose import JWTError, jwt
 
-JWT_ISSUER = 'com.zalando.connexion'
+JWT_ISSUER = 'jwt.authforall.sheep'
 JWT_SECRET = 'change_this'
 JWT_LIFETIME_SECONDS = 600
 JWT_ALGORITHM = 'HS256'
@@ -48,6 +48,6 @@ def _current_timestamp() -> int:
 
 
 if __name__ == '__main__':
-    app = connexion.FlaskApp(__name__)
+    app = specific.FlaskApp(__name__)
     app.add_api('openapi.yaml')
     app.run(port=8080)

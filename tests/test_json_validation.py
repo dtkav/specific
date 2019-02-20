@@ -4,9 +4,9 @@ from jsonschema.validators import _utils, extend
 
 import pytest
 from conftest import build_app_from_fixture
-from connexion import App
-from connexion.decorators.validation import RequestBodyValidator
-from connexion.json_schema import Draft4RequestValidator
+from specific import App
+from specific.decorators.validation import RequestBodyValidator
+from specific.json_schema import Draft4RequestValidator
 
 SPECS = ["swagger.yaml", "openapi.yaml"]
 

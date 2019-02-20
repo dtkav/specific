@@ -3,9 +3,9 @@
 Basic example of a resource server
 '''
 
-import connexion
-from connexion.decorators.security import validate_scope
-from connexion.exceptions import OAuthScopeProblem
+import specific
+from specific.decorators.security import validate_scope
+from specific.exceptions import OAuthScopeProblem
 
 
 def basic_auth(username, password, required_scopes=None):
@@ -37,6 +37,6 @@ def get_secret(user) -> str:
 
 
 if __name__ == '__main__':
-    app = connexion.FlaskApp(__name__)
+    app = specific.FlaskApp(__name__)
     app.add_api('openapi.yaml')
     app.run(port=8080)
