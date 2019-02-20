@@ -7,9 +7,9 @@ from openapi_spec_validator.loaders import ExtendedSafeLoader
 import mock
 import pytest
 from conftest import TEST_FOLDER, build_app_from_fixture
-from connexion import App
-from connexion.exceptions import InvalidSpecification
-from connexion.http_facts import METHODS
+from specific import App
+from specific.exceptions import InvalidSpecification
+from specific.http_facts import METHODS
 
 SPECS = ["swagger.yaml", "openapi.yaml"]
 
@@ -30,7 +30,7 @@ def test_app_with_relative_path(simple_api_spec_dir, spec):
 
 @pytest.mark.parametrize("spec", SPECS)
 def test_app_with_resolver(simple_api_spec_dir, spec):
-    from connexion.resolver import Resolver
+    from specific.resolver import Resolver
     resolver = Resolver()
     app = App(__name__, port=5001,
               specification_dir='..' / simple_api_spec_dir.relative_to(TEST_FOLDER),
@@ -55,7 +55,7 @@ def test_app_with_different_server_option(simple_api_spec_dir, spec):
 
 
 def test_app_with_different_uri_parser(simple_api_spec_dir):
-    from connexion.decorators.uri_parsing import FirstValueURIParser
+    from specific.decorators.uri_parsing import FirstValueURIParser
     app = App(__name__, port=5001,
               specification_dir='..' / simple_api_spec_dir.relative_to(TEST_FOLDER),
               options={"uri_parser_class": FirstValueURIParser},
@@ -252,7 +252,7 @@ def test_handle_add_operation_error(simple_api_spec_dir):
 
 
 def test_using_all_fields_in_path_item(simple_api_spec_dir):
-    """Test that connexion will try to add an endpoint only on http methods.
+    """Test that specific will try to add an endpoint only on http methods.
 
     test also that each http methods has its own endpoint.
     """

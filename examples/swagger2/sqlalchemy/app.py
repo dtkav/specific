@@ -2,8 +2,8 @@
 import datetime
 import logging
 
-import connexion
-from connexion import NoContent
+import specific
+from specific import NoContent
 
 import orm
 
@@ -48,7 +48,7 @@ def delete_pet(pet_id):
 
 logging.basicConfig(level=logging.INFO)
 db_session = orm.init_db('sqlite:///:memory:')
-app = connexion.FlaskApp(__name__)
+app = specific.FlaskApp(__name__)
 app.add_api('swagger.yaml')
 
 application = app.app

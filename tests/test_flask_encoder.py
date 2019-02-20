@@ -3,7 +3,7 @@ import json
 import math
 from decimal import Decimal
 
-from connexion.apps.flask_app import FlaskJSONEncoder
+from specific.apps.flask_app import FlaskJSONEncoder
 
 
 def test_json_encoder():

@@ -2,10 +2,10 @@ import json
 
 import flask
 
-from connexion.apis.flask_api import FlaskApi
-from connexion.decorators.validation import ParameterValidator
 # we are using "mock" module here for Py 2.7 support
 from mock import MagicMock
+from specific.apis.flask_api import FlaskApi
+from specific.decorators.validation import ParameterValidator
 
 
 def test_parameter_validator(monkeypatch):

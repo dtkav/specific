@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-example of aiohttp connexion running behind a path-altering reverse-proxy
+example of aiohttp specific running behind a path-altering reverse-proxy
 '''
 
 import json
 
-import connexion
+import specific
 
 from aiohttp import web
 from aiohttp_remotes.exceptions import RemoteError, TooManyHeaders
@@ -69,7 +69,7 @@ def hello(request):
 
 
 if __name__ == '__main__':
-    app = connexion.AioHttpApp(__name__)
+    app = specific.AioHttpApp(__name__)
     app.add_api('openapi.yaml', pass_context_arg_name='request')
     aio = app.app
     reverse_proxied = XPathForwarded()

@@ -1,5 +1,5 @@
-from connexion.operations import OpenAPIOperation
-from connexion.resolver import MethodViewResolver, Resolver
+from specific.operations import OpenAPIOperation
+from specific.resolver import MethodViewResolver, Resolver
 
 COMPONENTS = {'parameters': {'myparam': {'in': 'path', 'schema': {'type': 'integer'}}}}
 

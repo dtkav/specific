@@ -1,10 +1,10 @@
 from jsonschema import ValidationError
 
 import pytest
-from connexion.decorators.validation import ParameterValidator
-from connexion.json_schema import (Draft4RequestValidator,
-                                   Draft4ResponseValidator)
 from mock import MagicMock
+from specific.decorators.validation import ParameterValidator
+from specific.json_schema import (Draft4RequestValidator,
+                                  Draft4ResponseValidator)
 
 
 def test_get_valid_parameter():
@@ -45,7 +45,7 @@ def test_get_nullable_parameter():
 
 def test_invalid_type(monkeypatch):
     logger = MagicMock()
-    monkeypatch.setattr('connexion.decorators.validation.logger', logger)
+    monkeypatch.setattr('specific.decorators.validation.logger', logger)
     result = ParameterValidator.validate_parameter('formdata', 20, {'type': 'string', 'name': 'foo'})
     expected_result = """20 is not of type 'string'
 
@@ -60,7 +60,7 @@ On instance:
 
 def test_invalid_type_value_error(monkeypatch):
     logger = MagicMock()
-    monkeypatch.setattr('connexion.decorators.validation.logger', logger)
+    monkeypatch.setattr('specific.decorators.validation.logger', logger)
     value = {'test': 1, 'second': 2}
     result = ParameterValidator.validate_parameter('formdata', value, {'type': 'boolean', 'name': 'foo'})
     assert result == "Wrong type, expected 'boolean' for formdata parameter 'foo'"
@@ -68,7 +68,7 @@ def test_invalid_type_value_error(monkeypatch):
 
 def test_enum_error(monkeypatch):
     logger = MagicMock()
-    monkeypatch.setattr('connexion.decorators.validation.logger', logger)
+    monkeypatch.setattr('specific.decorators.validation.logger', logger)
     value = 'INVALID'
     param = {'schema': {'type': 'string', 'enum': ['valid']},
              'name': 'test_path_param'}

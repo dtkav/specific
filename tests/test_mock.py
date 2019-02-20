@@ -1,5 +1,5 @@
-from connexion.mock import MockResolver, partial
-from connexion.operations import Swagger2Operation
+from specific.mock import MockResolver, partial
+from specific.operations import Swagger2Operation
 
 
 def test_partial():

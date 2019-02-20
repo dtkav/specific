@@ -4,7 +4,7 @@ from struct import unpack
 import yaml
 from werkzeug.test import Client, EnvironBuilder
 
-from connexion.apps.flask_app import FlaskJSONEncoder
+from specific.apps.flask_app import FlaskJSONEncoder
 
 
 def test_app(simple_app):
@@ -110,7 +110,7 @@ def test_jsonifier(simple_app):
 
     get_greetings = app_client.get('/v1.0/greetings/jsantos', data={})  # type: flask.Response
     assert get_greetings.status_code == 200
-    assert get_greetings.content_type == 'application/x.connexion+json'
+    assert get_greetings.content_type == 'application/x.specific+json'
     greetings_reponse = json.loads(get_greetings.data.decode('utf-8', 'replace'))
     assert len(greetings_reponse) == 1
     assert greetings_reponse['greetings'] == 'Hello jsantos'

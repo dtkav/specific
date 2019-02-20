@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 import logging
 
-import connexion
-from connexion.resolver import MethodViewResolver
+import specific
+from specific.resolver import MethodViewResolver
 
 logging.basicConfig(level=logging.INFO)
 
 if __name__ == '__main__':
-    app = connexion.FlaskApp(__name__, specification_dir='openapi/', debug=True)
+    app = specific.FlaskApp(__name__, specification_dir='openapi/', debug=True)
 
     options = {"swagger_ui": True}
     app.add_api('pets-api.yaml',

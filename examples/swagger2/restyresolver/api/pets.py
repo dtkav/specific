@@ -1,6 +1,6 @@
 import datetime
 
-from connexion import NoContent
+from specific import NoContent
 
 pets = {}
 

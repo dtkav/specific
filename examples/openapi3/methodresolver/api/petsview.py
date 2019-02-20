@@ -1,8 +1,8 @@
 import datetime
 
-from connexion import NoContent
 from flask import request
 from flask.views import MethodView
+from specific import NoContent
 
 
 class PetsView(MethodView):

@@ -51,7 +51,7 @@ paths:
       description: Generates a greeting message with custom mimetype
       operationId: fakeapi.hello.get_greetings
       produces:
-        - application/x.connexion+json
+        - application/x.specific+json
       responses:
         '200':
           description: greeting response
@@ -389,7 +389,7 @@ paths:
         - name: name
           in: query
           type: string
-          default: connexion
+          default: specific
       responses:
         200:
           description: OK

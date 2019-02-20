@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import connexion
 import jsonschema
 import six
-from connexion.decorators.validation import RequestBodyValidator
-from connexion.json_schema import Draft4RequestValidator
+import specific
+from specific.decorators.validation import RequestBodyValidator
+from specific.json_schema import Draft4RequestValidator
 
 
 def echo(data):
@@ -42,7 +42,7 @@ validator_map = {
 
 
 if __name__ == '__main__':
-    app = connexion.FlaskApp(
+    app = specific.FlaskApp(
         __name__, port=8080, specification_dir='.')
     app.add_api('enforcedefaults-api.yaml', validator_map=validator_map)
     app.run()

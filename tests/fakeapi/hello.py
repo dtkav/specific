@@ -2,7 +2,7 @@
 import flask
 from flask import jsonify, redirect
 
-from connexion import NoContent, ProblemException, context, problem
+from specific import NoContent, ProblemException, context, problem
 
 
 class DummyClass(object):
@@ -81,7 +81,7 @@ def get_bye_secure_from_flask():
     return 'Goodbye {user} (Secure!)'.format(user=context['user'])
 
 
-def get_bye_secure_from_connexion(req_context):
+def get_bye_secure_from_specific(req_context):
     return 'Goodbye {user} (Secure!)'.format(user=req_context['user'])
 
 

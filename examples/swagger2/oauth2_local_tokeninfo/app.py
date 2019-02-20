@@ -3,7 +3,7 @@
 Basic example of a resource server
 '''
 
-import connexion
+import specific
 
 # our hardcoded mock "Bearer" access tokens
 TOKENS = {
@@ -24,6 +24,6 @@ def token_info(access_token) -> dict:
 
 
 if __name__ == '__main__':
-    app = connexion.FlaskApp(__name__)
+    app = specific.FlaskApp(__name__)
     app.add_api('app.yaml')
     app.run(port=8080)
