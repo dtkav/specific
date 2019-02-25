@@ -21,7 +21,6 @@ def read_version(package):
 version = read_version('specific')
 
 install_requires = [
-    'clickclick>=1.2',
     'jsonschema>=2.5.1,<3.0.0',
     'PyYAML>=3.13',
     'requests>=2.9.1',

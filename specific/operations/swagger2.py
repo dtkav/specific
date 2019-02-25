@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from specific.operations.abstract import AbstractOperation
 
-from ..decorators.uri_parsing import Swagger2URIParser
+from ..decorators.array_parsing import Swagger2ArrayParser
 from ..exceptions import InvalidSpecification
 from ..utils import deep_get, is_null, is_nullable, make_type
 
@@ -27,7 +27,7 @@ class Swagger2Operation(AbstractOperation):
                  definitions=None, parameter_definitions=None,
                  response_definitions=None, validate_responses=False, strict_validation=False,
                  randomize_endpoint=None, validator_map=None, pythonic_params=False,
-                 uri_parser_class=None, pass_context_arg_name=None):
+                 array_parser_class=None, pass_context_arg_name=None):
         """
         :param api: api that this operation is attached to
         :type api: apis.AbstractAPI
@@ -68,14 +68,14 @@ class Swagger2Operation(AbstractOperation):
         :param pythonic_params: When True CamelCase parameters are converted to snake_case and an underscore is appended
         to any shadowed built-ins
         :type pythonic_params: bool
-        :param uri_parser_class: class to use for uri parseing
-        :type uri_parser_class: AbstractURIParser
+        :param array_parser_class: class to use for uri parseing
+        :type array_parser_class: AbstractArrayParser
         :param pass_context_arg_name: If not None will try to inject the request context to the function using this
         name.
         :type pass_context_arg_name: str|None
         """
         app_security = operation.get('security', app_security)
-        uri_parser_class = uri_parser_class or Swagger2URIParser
+        array_parser_class = array_parser_class or Swagger2ArrayParser
 
         self._router_controller = operation.get('x-swagger-router-controller')
 
@@ -92,7 +92,7 @@ class Swagger2Operation(AbstractOperation):
             randomize_endpoint=randomize_endpoint,
             validator_map=validator_map,
             pythonic_params=pythonic_params,
-            uri_parser_class=uri_parser_class,
+            array_parser_class=array_parser_class,
             pass_context_arg_name=pass_context_arg_name
         )
 

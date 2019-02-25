@@ -18,13 +18,13 @@ QUERY_STRING_DELIMITERS = {
 
 
 @six.add_metaclass(abc.ABCMeta)
-class AbstractURIParser(BaseDecorator):
+class AbstractArrayParser(BaseDecorator):
     parsable_parameters = ["query", "path"]
 
     def __init__(self, param_defns, body_defn):
         """
-        a URI parser is initialized with parameter definitions.
-        When called with a request object, it handles array types in the URI
+        a Array parser is initialized with parameter definitions.
+        When called with a request object, it handles array types in the Array
         both in the path and query according to the spec.
         Some examples include:
          - https://mysite.fake/in/path/1,2,3/            # path parameters
@@ -146,7 +146,7 @@ class AbstractURIParser(BaseDecorator):
         return wrapper
 
 
-class OpenAPIURIParser(AbstractURIParser):
+class OpenAPIArrayParser(AbstractArrayParser):
     style_defaults = {"path": "simple", "header": "simple",
                       "query": "form", "cookie": "form",
                       "form": "form"}
@@ -191,7 +191,7 @@ class OpenAPIURIParser(AbstractURIParser):
             However, if 'explode' is 'True' then the duplicate values
             are concatenated together and `a` would be "1,2,3,4,5,6".
         """
-        default_style = OpenAPIURIParser.style_defaults[_in]
+        default_style = OpenAPIArrayParser.style_defaults[_in]
         style = param_defn.get('style', default_style)
         delimiter = QUERY_STRING_DELIMITERS.get(style, ',')
         is_form = (style == 'form')
@@ -204,13 +204,13 @@ class OpenAPIURIParser(AbstractURIParser):
 
     @staticmethod
     def _split(value, param_defn, _in):
-        default_style = OpenAPIURIParser.style_defaults[_in]
+        default_style = OpenAPIArrayParser.style_defaults[_in]
         style = param_defn.get('style', default_style)
         delimiter = QUERY_STRING_DELIMITERS.get(style, ',')
         return value.split(delimiter)
 
 
-class Swagger2URIParser(AbstractURIParser):
+class Swagger2ArrayParser(AbstractArrayParser):
     """
     Adheres to the Swagger2 spec,
     Assumes the the last defined query parameter should be used.
@@ -255,7 +255,7 @@ class Swagger2URIParser(AbstractURIParser):
         return value.split(',')
 
 
-class FirstValueURIParser(Swagger2URIParser):
+class FirstValueArrayParser(Swagger2ArrayParser):
     """
     Adheres to the Swagger2 spec
     Assumes that the first defined query parameter should be used
@@ -276,7 +276,7 @@ class FirstValueURIParser(Swagger2URIParser):
         return values[0]
 
 
-class AlwaysMultiURIParser(Swagger2URIParser):
+class AlwaysMultiArrayParser(Swagger2ArrayParser):
     """
     Does not adhere to the Swagger2 spec, but is backwards compatible with
     specific behavior in version 1.4.2

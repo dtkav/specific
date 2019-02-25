@@ -3,44 +3,13 @@ import sys
 from os import path
 
 import click
-from clickclick import AliasedGroup, fatal_error
 
 import specific
 from specific.mock import MockResolver
+from specific.apps.flask_app import FlaskApp
 
 logger = logging.getLogger(__name__)
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
-FLASK_APP = 'flask'
-AIOHTTP_APP = 'aiohttp'
-AVAILABLE_SERVERS = {
-    'flask': [FLASK_APP],
-    'gevent': [FLASK_APP],
-    'tornado': [FLASK_APP],
-    'aiohttp': [AIOHTTP_APP]
-}
-AVAILABLE_APPS = {
-    FLASK_APP: 'specific.apps.flask_app.FlaskApp',
-    AIOHTTP_APP: 'specific.apps.aiohttp_app.AioHttpApp'
-}
-DEFAULT_SERVERS = {
-    FLASK_APP: FLASK_APP,
-    AIOHTTP_APP: AIOHTTP_APP
-}
-
-
-def validate_server_requirements(ctx, param, value):
-    if value == 'gevent':
-        try:
-            import gevent  # NOQA
-        except ImportError:
-            fatal_error('gevent library is not installed')
-    elif value == 'tornado':
-        try:
-            import tornado  # NOQA
-        except ImportError:
-            fatal_error('tornado library is not installed')
-    else:
-        return value
 
 
 def print_version(ctx, param, value):
@@ -50,7 +19,7 @@ def print_version(ctx, param, value):
     ctx.exit()
 
 
-@click.group(cls=AliasedGroup, context_settings=CONTEXT_SETTINGS)
+@click.group(context_settings=CONTEXT_SETTINGS)
 @click.option('-V', '--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True,
               help='Print the current version number and exit.')
 def main():
@@ -62,14 +31,6 @@ def main():
 @click.argument('base_module_path', required=False)
 @click.option('--port', '-p', default=5000, type=int, help='Port to listen.')
 @click.option('--host', '-H', type=str, help='Host interface to bind on.')
-@click.option('--wsgi-server', '-w',
-              type=click.Choice(AVAILABLE_SERVERS.keys()),
-              callback=validate_server_requirements,
-              help='Which WSGI server container to use. (deprecated, use --server instead)')
-@click.option('--server', '-s',
-              type=click.Choice(AVAILABLE_SERVERS.keys()),
-              callback=validate_server_requirements,
-              help='Which server container to use.')
 @click.option('--stub',
               help='Returns status code 501, and `Not Implemented Yet` payload, for '
               'the endpoints which handlers are not found.',
@@ -100,15 +61,10 @@ def main():
 @click.option('--verbose', '-v', help='Show verbose information.', count=True)
 @click.option('--base-path', metavar='PATH',
               help='Override the basePath in the API spec.')
-@click.option('--app-framework', '-f', default=FLASK_APP,
-              type=click.Choice(AVAILABLE_APPS.keys()),
-              help='The app framework used to run the server')
 def run(spec_file,
         base_module_path,
         port,
         host,
-        wsgi_server,
-        server,
         stub,
         mock,
         hide_spec,
@@ -120,10 +76,9 @@ def run(spec_file,
         strict_validation,
         debug,
         verbose,
-        base_path,
-        app_framework):
+        base_path):
     """
-    Runs a server compliant with a OpenAPI/Swagger 2.0 Specification file.
+    Runs a server compliant with a OpenAPI Specification file.
 
     Arguments:
 
@@ -131,29 +86,6 @@ def run(spec_file,
 
     - BASE_MODULE_PATH (optional): filesystem path where the API endpoints handlers are going to be imported from.
     """
-    if wsgi_server and server:
-        raise click.BadParameter(
-            "these options are mutually exclusive",
-            param_hint="'wsgi-server' and 'server'"
-        )
-    elif wsgi_server:
-        server = wsgi_server
-
-    if server is None:
-        server = DEFAULT_SERVERS[app_framework]
-
-    if app_framework not in AVAILABLE_SERVERS[server]:
-        message = "Invalid server '{}' for app-framework '{}'".format(
-            server, app_framework
-        )
-        raise click.UsageError(message)
-
-    if app_framework == AIOHTTP_APP:
-        try:
-            import aiohttp  # NOQA
-        except Exception:
-            fatal_error('aiohttp library is not installed')
-
     logging_level = logging.WARN
     if verbose > 0:
         logging_level = logging.INFO
@@ -178,10 +110,6 @@ def run(spec_file,
         resolver = MockResolver(mock_all=mock == 'all')
         api_extra_args['resolver'] = resolver
 
-    app_cls = specific.utils.get_function_from_name(
-      AVAILABLE_APPS[app_framework]
-    )
-
     options = {
         "serve_spec": not hide_spec,
         "swagger_path": console_ui_from or None,
@@ -189,10 +117,10 @@ def run(spec_file,
         "swagger_url": console_ui_url or None
     }
 
-    app = app_cls(__name__,
-                  debug=debug,
-                  auth_all_paths=auth_all_paths,
-                  options=options)
+    app = FlaskApp(__name__,
+                   debug=debug,
+                   auth_all_paths=auth_all_paths,
+                   options=options)
 
     app.add_api(spec_file_full_path,
                 base_path=base_path,
@@ -203,7 +131,6 @@ def run(spec_file,
 
     app.run(port=port,
             host=host,
-            server=server,
             debug=debug)
 
 

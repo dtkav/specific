@@ -3,7 +3,7 @@ from copy import deepcopy
 
 from specific.operations.abstract import AbstractOperation
 
-from ..decorators.uri_parsing import OpenAPIURIParser
+from ..decorators.array_parsing import OpenAPIArrayParser
 from ..utils import deep_get, is_null, is_nullable, make_type
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ class OpenAPIOperation(AbstractOperation):
     def __init__(self, api, method, path, operation, resolver, path_parameters=None,
                  app_security=None, components=None, validate_responses=False,
                  strict_validation=False, randomize_endpoint=None, validator_map=None,
-                 pythonic_params=False, uri_parser_class=None, pass_context_arg_name=None):
+                 pythonic_params=False, array_parser_class=None, pass_context_arg_name=None):
         """
         This class uses the OperationID identify the module and function that will handle the operation
 
@@ -54,8 +54,8 @@ class OpenAPIOperation(AbstractOperation):
         :param pythonic_params: When True CamelCase parameters are converted to snake_case and an underscore is appended
         to any shadowed built-ins
         :type pythonic_params: bool
-        :param uri_parser_class: class to use for uri parseing
-        :type uri_parser_class: AbstractURIParser
+        :param array_parser_class: class to use for uri parseing
+        :type array_parser_class: AbstractArrayParser
         :param pass_context_arg_name: If not None will try to inject the request context to the function using this
         name.
         :type pass_context_arg_name: str|None
@@ -68,7 +68,7 @@ class OpenAPIOperation(AbstractOperation):
         # operation overrides globals
         security_schemes = component_get('securitySchemes')
         app_security = operation.get('security', app_security)
-        uri_parser_class = uri_parser_class or OpenAPIURIParser
+        array_parser_class = array_parser_class or OpenAPIArrayParser
 
         self._router_controller = operation.get('x-openapi-router-controller')
 
@@ -85,7 +85,7 @@ class OpenAPIOperation(AbstractOperation):
             randomize_endpoint=randomize_endpoint,
             validator_map=validator_map,
             pythonic_params=pythonic_params,
-            uri_parser_class=uri_parser_class,
+            array_parser_class=array_parser_class,
             pass_context_arg_name=pass_context_arg_name
         )
 

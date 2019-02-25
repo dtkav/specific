@@ -46,7 +46,7 @@ class AbstractOperation(SecureOperation):
                  app_security=None, security_schemes=None,
                  validate_responses=False, strict_validation=False,
                  randomize_endpoint=None, validator_map=None,
-                 pythonic_params=False, uri_parser_class=None,
+                 pythonic_params=False, array_parser_class=None,
                  pass_context_arg_name=None):
         """
         :param api: api that this operation is attached to
@@ -75,8 +75,8 @@ class AbstractOperation(SecureOperation):
         :param pythonic_params: When True CamelCase parameters are converted to snake_case and an underscore is appended
         to any shadowed built-ins
         :type pythonic_params: bool
-        :param uri_parser_class: class to use for uri parseing
-        :type uri_parser_class: AbstractURIParser
+        :param array_parser_class: class to use for array parsing
+        :type array_parser_class: AbstractArrayParser
         :param pass_context_arg_name: If not None will try to inject the request context to the function using this
         name.
         :type pass_context_arg_name: str|None
@@ -91,7 +91,7 @@ class AbstractOperation(SecureOperation):
         self._validate_responses = validate_responses
         self._strict_validation = strict_validation
         self._pythonic_params = pythonic_params
-        self._uri_parser_class = uri_parser_class
+        self._array_parser_class = array_parser_class
         self._pass_context_arg_name = pass_context_arg_name
         self._randomize_endpoint = randomize_endpoint
 
@@ -332,12 +332,12 @@ class AbstractOperation(SecureOperation):
             return DEFAULT_MIMETYPE
 
     @property
-    def _uri_parsing_decorator(self):
+    def _array_parsing_decorator(self):
         """
         Returns a decorator that parses request data and handles things like
         array types, and duplicate parameter definitions.
         """
-        return self._uri_parser_class(self.parameters, self.body_definition)
+        return self._array_parser_class(self.parameters, self.body_definition)
 
     @property
     def function(self):
@@ -385,8 +385,8 @@ class AbstractOperation(SecureOperation):
         for validation_decorator in self.__validation_decorators:
             function = validation_decorator(function)
 
-        uri_parsing_decorator = self._uri_parsing_decorator
-        function = uri_parsing_decorator(function)
+        array_parsing_decorator = self._array_parsing_decorator
+        function = array_parsing_decorator(function)
 
         # NOTE: the security decorator should be applied last to check auth before anything else :-)
         security_decorator = self.security_decorator
