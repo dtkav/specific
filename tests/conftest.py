@@ -6,7 +6,7 @@ import sys
 import pytest
 from specific import App
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 TEST_FOLDER = pathlib.Path(__file__).parent
 FIXTURES_FOLDER = TEST_FOLDER / 'fixtures'

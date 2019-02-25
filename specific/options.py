@@ -112,13 +112,13 @@ class SpecificOptions(object):
         return self._options.get('swagger_path', self.swagger_ui_local_path)
 
     @property
-    def uri_parser_class(self):
-        # type: () -> AbstractURIParser
+    def array_parser_class(self):
+        # type: () -> AbstractArrayParser
         """
-        The class to use for parsing URIs into path and query parameters.
+        The class to use for parsing parameter arrays.
         Default: None
         """
-        return self._options.get('uri_parser_class', None)
+        return self._options.get('array_parser_class', None)
 
 
 def filter_values(dictionary):

@@ -167,7 +167,7 @@ class AbstractAPI(object):
             validator_map=self.validator_map,
             strict_validation=self.strict_validation,
             pythonic_params=self.pythonic_params,
-            uri_parser_class=self.options.uri_parser_class,
+            array_parser_class=self.options.array_parser_class,
             pass_context_arg_name=self.pass_context_arg_name
         )
         self._add_operation_internal(method, path, operation)

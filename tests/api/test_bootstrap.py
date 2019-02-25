@@ -54,11 +54,11 @@ def test_app_with_different_server_option(simple_api_spec_dir, spec):
     assert get_bye.data == b'Goodbye jsantos'
 
 
-def test_app_with_different_uri_parser(simple_api_spec_dir):
-    from specific.decorators.uri_parsing import FirstValueURIParser
+def test_app_with_different_array_parser(simple_api_spec_dir):
+    from specific.decorators.array_parsing import FirstValueArrayParser
     app = App(__name__, port=5001,
               specification_dir='..' / simple_api_spec_dir.relative_to(TEST_FOLDER),
-              options={"uri_parser_class": FirstValueURIParser},
+              options={"array_parser_class": FirstValueArrayParser},
               debug=True)
     app.add_api('swagger.yaml')
 

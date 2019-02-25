@@ -6,7 +6,7 @@ import click
 
 import specific
 from specific.mock import MockResolver
-from specific.apps.flask_app import FlaskApp
+from specific import utils
 
 logger = logging.getLogger(__name__)
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
@@ -117,10 +117,12 @@ def run(spec_file,
         "swagger_url": console_ui_url or None
     }
 
-    app = FlaskApp(__name__,
-                   debug=debug,
-                   auth_all_paths=auth_all_paths,
-                   options=options)
+    app_cls = utils.get_function_from_name(
+        'specific.apps.flask_app.FlaskApp')
+    app = app_cls(__name__,
+                  debug=debug,
+                  auth_all_paths=auth_all_paths,
+                  options=options)
 
     app.add_api(spec_file_full_path,
                 base_path=base_path,

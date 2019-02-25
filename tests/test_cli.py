@@ -8,12 +8,13 @@ from conftest import FIXTURES_FOLDER
 from mock import MagicMock
 from mock import call as mock_call
 from specific.cli import main
+from specific.apps.flask_app import FlaskApp
 from specific.exceptions import ResolverError
 
 
 @pytest.fixture()
 def mock_app_run(mock_get_function_from_name):
-    test_server = MagicMock(wraps=specific.FlaskApp(__name__))
+    test_server = MagicMock(wraps=FlaskApp(__name__))
     test_server.run = MagicMock(return_value=True)
     test_app = MagicMock(return_value=test_server)
     mock_get_function_from_name.return_value = test_app
@@ -73,7 +74,6 @@ def test_run_simple_spec(mock_app_run, spec_file):
     app_instance.run.assert_called_with(
         port=default_port,
         host=None,
-        server='flask',
         debug=False)
 
 
@@ -86,7 +86,6 @@ def test_run_spec_with_host(mock_app_run, spec_file):
     app_instance.run.assert_called_with(
         port=default_port,
         host='custom.host',
-        server='flask',
         debug=False)
 
 
@@ -233,74 +232,3 @@ def test_run_unimplemented_operations_and_mock(mock_app_run):
     # yet can be run with --mock option
     result = runner.invoke(main, ['run', spec_file, '--mock=all'], catch_exceptions=False)
     assert result.exit_code == 0
-
-
-def test_run_with_wsgi_containers(mock_app_run, spec_file):
-    runner = CliRunner()
-
-    # missing gevent
-    result = runner.invoke(main,
-                           ['run', spec_file, '-w', 'gevent'],
-                           catch_exceptions=False)
-    assert 'gevent library is not installed' in result.output
-    assert result.exit_code == 1
-
-    # missing tornado
-    result = runner.invoke(main,
-                           ['run', spec_file, '-w', 'tornado'],
-                           catch_exceptions=False)
-    assert 'tornado library is not installed' in result.output
-    assert result.exit_code == 1
-
-    # using flask
-    result = runner.invoke(main,
-                           ['run', spec_file, '-w', 'flask'],
-                           catch_exceptions=False)
-    assert result.exit_code == 0
-
-
-def test_run_with_aiohttp_not_installed(mock_app_run, spec_file):
-    import sys
-    import mock
-    with mock.patch.dict(sys.modules, {'aiohttp': None}):
-        runner = CliRunner()
-        result = runner.invoke(main,
-                               ['run', spec_file, '-f', 'aiohttp'],
-                               catch_exceptions=False)
-        assert 'aiohttp library is not installed' in result.output
-        assert result.exit_code == 1
-
-
-def test_run_with_wsgi_server_and_server_opts(mock_app_run, spec_file):
-    runner = CliRunner()
-
-    result = runner.invoke(main,
-                           ['run', spec_file,
-                            '-w', 'flask',
-                            '-s', 'flask'],
-                           catch_exceptions=False)
-    assert "these options are mutually exclusive" in result.output
-    assert result.exit_code == 2
-
-
-def test_run_with_incompatible_server_and_default_framework(mock_app_run, spec_file):
-    runner = CliRunner()
-
-    result = runner.invoke(main,
-                           ['run', spec_file,
-                           '-s', 'aiohttp'],
-                           catch_exceptions=False)
-    assert "Invalid server 'aiohttp' for app-framework 'flask'" in result.output
-    assert result.exit_code == 2
-
-
-def test_run_with_incompatible_server_and_framework(mock_app_run, spec_file):
-    runner = CliRunner()
-
-    result = runner.invoke(main,
-                           ['run', spec_file,
-                           '-s', 'flask',
-                           '-f', 'aiohttp'],
-                           catch_exceptions=False)
-    assert "Invalid server 'flask' for app-framework 'aiohttp'" in result.output
-    assert result.exit_code == 2
